@@ -8,24 +8,24 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Bước 1: Khởi tạo Java 21 tương thích với Gradle 9.x
+    # Bước 1: Khởi tạo Java 21 chuẩn
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
 
-    # Bước 2: Nâng cấp kịch trần lên Gradle 9.3.1 đúng theo yêu cầu của hệ thống
+    # Bước 2: Khởi tạo Gradle 9.3.1 đồng bộ kịch trần
     - name: Setup Gradle 9.3.1
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: Đóng gói file debug APK trực tiếp từ thư mục gốc
+    # Bước 3: Đóng gói file APK (Đã ghim lệnh ngắt bộ nhớ đệm --no-configuration-cache để xóa lỗi KSP)
     - name: Build Debug APK
-      run: gradle assembleDebug --stacktrace
+      run: gradle assembleDebug --no-configuration-cache --stacktrace
 
-    # Bước 4: Xuất file APK ra ngoài màn hình để tải về máy tính
+    # Bước 4: Xuất file APK thành phẩm ra ngoài màn hình để tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
