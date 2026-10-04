@@ -8,30 +8,35 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Cài đặt Java 17 chuẩn
+    # Bước 1: Khởi tạo môi trường Java 17 chuẩn
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
         java-version: '17'
         distribution: 'temurin'
-        cache: 'gradle'
 
-    # ĐOẠN CODE QUAN TRỌNG: Tự động tải và sinh tệp gradlew bị thiếu vào thư mục app
+    # Bước 2: Ép máy chủ GitHub tải và cài đặt chính xác phiên bản Gradle 8.5 để tương thích với code Gemini
+    - name: Setup Gradle 8.5
+      uses: gradle/actions/setup-gradle@v4
+      with:
+        gradle-version: '8.5'
+
+    # Bước 3: Tự động bù đắp tệp thực thi gradlew đồng bộ vào thư mục app
     - name: Generate Gradle Wrapper
       run: gradle wrapper
       working-directory: app
 
-    # Cấp quyền thực thi hệ thống cho tệp vừa sinh ra
+    # Bước 4: Khóa quyền thực thi bảo mật cho tệp hệ thống vừa sinh ra
     - name: Grant Execute Permission for Gradlew
       run: chmod +x gradlew
       working-directory: app
 
-    # Tiến hành đóng gói file APK thành phẩm
+    # Bước 5: Tiến hành đóng gói file APK thành phẩm từ thư mục con
     - name: Build Debug APK
       run: ./gradlew assembleDebug --stacktrace
       working-directory: app
 
-    # Xuất file APK ra màn hình để tải về máy tính
+    # Bước 6: Xuất file APK ra ngoài màn hình để tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
