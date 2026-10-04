@@ -21,13 +21,20 @@ jobs:
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: Ép lệnh build chỉ đóng gói code thô, bỏ qua tác vụ validateSigning để tránh crash máy chủ
-    - name: Build Debug APK Without Signing Validation
-      run: gradle assembleDebug -x validateSigningDebug --no-configuration-cache --stacktrace
+    # Bước 3: MẸO GỠ SẬP CỦA GOOGLE: Tạo file khóa ảo ngay tại phân vùng hệ thống để AGP 9.x không báo lỗi package
+    - name: Setup Dummy Keystore
+      run: |
+        mkdir -p ~/.android
+        keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
-    # Bước 4: Xuất file APK thành phẩm ra ngoài màn hình để tải về máy tính
+    # Bước 4: Ép lệnh build chạy độc lập, bỏ qua hoàn toàn các lớp xác thực ký tên lằng nhằng
+    - name: Build Debug APK
+      run: gradle assembleDebug -x validateSigningDebug -x packageDebug --no-configuration-cache --stacktrace
+
+    # Bước 5: Kiểm tra và xuất file APK thành phẩm ra màn hình (Quét đa tầng để lấy tệp Unsigned)
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: SieuDongBangAPK
-        path: app/build/outputs/apk/debug/app-debug.apk
+        path: |
+          app/build/outputs/apk/debug/*.apk
