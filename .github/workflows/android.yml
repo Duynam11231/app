@@ -8,7 +8,7 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Đổi sang dùng Java 17 chuẩn để tương thích với tệp cấu hình kts của Gemini
+    # Cài đặt Java 17 tương thích với cấu hình kts của Gemini
     - name: Set up JDK 17
       uses: actions/setup-java@v4
       with:
@@ -16,17 +16,17 @@ jobs:
         distribution: 'temurin'
         cache: 'gradle'
 
-    # Sửa quyền thực thi bắt buộc cho tệp tin chạy nền
+    # Sửa quyền chạy bắt buộc cho tệp gradlew nằm sâu bên trong thư mục app
     - name: Grant Execute Permission for Gradlew
       run: chmod +x gradlew
       working-directory: app
 
-    # Ép máy chủ gọi lệnh build chuyên dụng cho cấu trúc build.gradle.kts
-    - name: Build Debug APK with Kotlin DSL
-      run: ./gradlew :app:assembleDebug --stacktrace
+    # Ép lệnh build chạy trực tiếp từ bên trong thư mục con "app"
+    - name: Build Debug APK
+      run: ./gradlew assembleDebug --stacktrace
       working-directory: app
 
-    # Xuất sản phẩm file APK ra màn hình để tải về máy tính
+    # Xuất file APK thành phẩm ra màn hình để tải về
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
