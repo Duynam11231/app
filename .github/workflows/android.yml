@@ -8,37 +8,27 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Bước 1: Nâng cấp lên Java 21 bắt buộc để chạy được Android Plugin 9.x
+    # Bước 1: Khởi tạo Java 21 bắt buộc
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
 
-    # Bước 2: Nâng cấp kịch trần lên Gradle 8.10.2 để tương thích hoàn toàn với bản 9.1.1
+    # Bước 2: Tự động nạp bộ gõ lệnh Gradle 8.10.2 trực tiếp vào hệ thống đám mây
     - name: Setup Gradle 8.10.2
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '8.10.2'
 
-    # Bước 3: Tạo tệp gradlew thực thi đồng bộ
-    - name: Generate Gradle Wrapper
-      run: gradle wrapper
-      working-directory: app
+    # Bước 3: Ép máy chủ đóng gói trực tiếp từ thư mục con sâu nhất (Đã sửa lỗi không tìm thấy task)
+    - name: Build Debug APK Directly
+      run: gradle assembleDebug --stacktrace
+      working-directory: app/app
 
-    # Bước 4: Khóa quyền bảo mật hệ thống cho tệp vừa sinh ra
-    - name: Grant Execute Permission for Gradlew
-      run: chmod +x gradlew
-      working-directory: app
-
-    # Bước 5: Tiến hành đóng gói file APK thành phẩm
-    - name: Build Debug APK
-      run: ./gradlew assembleDebug --stacktrace
-      working-directory: app
-
-    # Bước 6: Xuất file APK ra ngoài màn hình để tải về
+    # Bước 4: Xuất file APK thành phẩm ra ngoài màn hình để tải về
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: SieuDongBangAPK
-        path: app/app/build/outputs/apk/debug/app-debug.apk
+        path: app/app/app/build/outputs/apk/debug/app-debug.apk
