@@ -21,11 +21,17 @@ jobs:
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: Đóng gói file APK (Đã ghim lệnh ngắt bộ nhớ đệm --no-configuration-cache để xóa lỗi KSP)
+    # Bước 3: MẸO CỨU HỘ: Tự động tạo file khóa debug.keystore ảo để vượt lỗi validateSigningDebug
+    - name: Create Debug Keystore
+      run: |
+        mkdir -p ~/.android
+        keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+
+    # Bước 4: Đóng gói file APK hoàn chỉnh
     - name: Build Debug APK
       run: gradle assembleDebug --no-configuration-cache --stacktrace
 
-    # Bước 4: Xuất file APK thành phẩm ra ngoài màn hình để tải về máy tính
+    # Bước 5: Xuất file APK thành phẩm ra ngoài màn hình để tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
