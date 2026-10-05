@@ -21,17 +21,11 @@ jobs:
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: ĐÃ SỬA CHUẨN: Ép máy chủ tạo tệp khóa nằm đúng phân vùng app/app để khớp với lệnh build gốc
-    - name: Generate Key Store File
-      run: |
-        mkdir -p app/app
-        keytool -genkey -v -keystore app/app/my-debug-key.jks -storepass androiddebug -alias androiddebugkey -keypass androiddebug -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-
-    # Bước 4: Khởi động quá trình đóng gói ứng dụng (Bỏ qua hoàn toàn rào cản SDK và Lint)
+    # Bước 3: Đóng gói trực tiếp (Bỏ qua hoàn toàn lệnh sinh key jks thủ công để hệ thống tự cấp khóa debug chuẩn của Google)
     - name: Build Debug APK
       run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint -x checkDebugAarMetadata --stacktrace
 
-    # Bước 5: Thu gom file APK ĐÃ ĐƯỢC KÝ XỊN đưa lên màn hình cho bạn tải về máy tính
+    # Bước 4: Thu gom file APK ĐÃ ĐƯỢC KÝ XỊN TỰ ĐỘNG đưa lên màn hình cho bạn tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
