@@ -19,7 +19,7 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // ĐÃ CHỈNH SỬA: Ép nhảy lùi 2 cấp thư mục để vớ đúng file khóa do GitHub Actions sinh ra
+  // Khớp nối đường dẫn tệp khóa vật lý ra bên ngoài thư mục gốc dự án
   signingConfigs {
     create("releaseConfig") {
       storeFile = file("../../my-debug-key.jks")
@@ -37,7 +37,7 @@ android {
       signingConfig = signingConfigs.getByName("releaseConfig")
     }
     debug { 
-      // Ép chế độ Debug mang chữ ký số chính thống để vượt xích bảo mật của máy Oppo A5s
+      // Ép mang chữ ký số xịn để bẻ khóa bảo mật của chiếc Oppo A5s
       signingConfig = signingConfigs.getByName("releaseConfig") 
     }
   }
