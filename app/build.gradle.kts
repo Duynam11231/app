@@ -7,17 +7,26 @@ plugins {
 
 android {
   namespace = "com.example"
-  // Ép cấu hình biên dịch kịch trần lên Android 16 theo đúng yêu cầu hệ thống
-  compileSdk = 36 
+  compileSdk = 35
 
   defaultConfig {
     applicationId = "com.aistudio.appfreezer.xyzabc"
     minSdk = 23
-    targetSdk = 36
+    targetSdk = 35
     versionCode = 1
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  // ĐOẠN CODE BẮT BUỘC: Tự cấu hình tạo file khóa bảo mật để vượt lỗi Oppo
+  signingConfigs {
+    create("releaseConfig") {
+      storeFile = file("my-debug-key.jks")
+      storePassword = "androiddebug"
+      keyAlias = "androiddebugkey"
+      keyPassword = "androiddebug"
+    }
   }
 
   buildTypes {
@@ -25,10 +34,11 @@ android {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = null
+      signingConfig = signingConfigs.getByName("releaseConfig")
     }
     debug { 
-      signingConfig = null // Tắt hoàn toàn chữ ký số Debug để vượt lỗi ValidateSigning rực rỡ
+      // Ép chế độ Debug cũng phải mang chữ ký số chính thống để vượt xích ColorOS
+      signingConfig = signingConfigs.getByName("releaseConfig") 
     }
   }
   compileOptions {
