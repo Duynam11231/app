@@ -19,10 +19,10 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // Khớp nối đường dẫn tệp khóa vật lý ra bên ngoài thư mục gốc dự án
+  // ĐÃ SỬA: Đóng gói tệp khóa nằm ngay tại thư mục cục bộ của ứng dụng để đồng bộ 100%
   signingConfigs {
     create("releaseConfig") {
-      storeFile = file("../../my-debug-key.jks")
+      storeFile = file("my-debug-key.jks")
       storePassword = "androiddebug"
       keyAlias = "androiddebugkey"
       keyPassword = "androiddebug"
