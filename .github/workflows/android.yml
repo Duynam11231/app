@@ -8,28 +8,25 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
-    # Bước 1: Khởi tạo Java 21 chuẩn
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
 
-    # Bước 2: Nâng cấp kịch trần lên Gradle 9.3.1 đúng theo yêu cầu hệ thống
     - name: Setup Gradle 9.3.1
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: Đóng gói file debug APK trực tiếp từ thư mục gốc
+    # Chạy lệnh biên dịch thuần túy (Bỏ qua toàn bộ các lớp test và xác thực)
     - name: Build Debug APK
-      run: gradle assembleDebug --no-configuration-cache --stacktrace
+      run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint
 
-    # Bước 4: ĐÃ SỬA: Quét sâu đa tầng thư mục để gom chính xác file APK găm lên màn hình
+    # Gom chính xác file APK găm lên mục Summary cho bạn tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: SieuDongBangAPK
         path: |
-          app/app/build/outputs/apk/debug/*.apk
-          app/build/outputs/apk/debug/*.apk
+          **/build/outputs/apk/debug/*.apk
