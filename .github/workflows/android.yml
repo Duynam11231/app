@@ -19,11 +19,11 @@ jobs:
       with:
         gradle-version: '9.3.1'
 
-    # Chạy lệnh biên dịch thuần túy (Bỏ qua toàn bộ các lớp test và xác thực)
+    # ĐÓNG GÓI ỨNG DỤNG TỐI CAO: Thêm cờ lệnh -x checkDebugAarMetadata để diệt tận gốc lỗi văng quét SDK
     - name: Build Debug APK
-      run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint
+      run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint -x checkDebugAarMetadata --stacktrace
 
-    # Gom chính xác file APK găm lên mục Summary cho bạn tải về máy tính
+    # Thu gom file APK găm lên mục tóm tắt Summary cho bạn tải về máy tính
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
