@@ -8,22 +8,29 @@ jobs:
     - name: Checkout Code
       uses: actions/checkout@v4
 
+    # Bước 1: Khởi tạo môi trường Java 21 chuẩn
     - name: Set up JDK 21
       uses: actions/setup-java@v4
       with:
         java-version: '21'
         distribution: 'temurin'
 
+    # Bước 2: Khởi tạo trình Gradle 9.3.1 kịch trần
     - name: Setup Gradle 9.3.1
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '9.3.1'
 
-    # ĐÓNG GÓI ỨNG DỤNG TỐI CAO: Thêm cờ lệnh -x checkDebugAarMetadata để diệt tận gốc lỗi văng quét SDK
-    - name: Build Debug APK
-      run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint -x checkDebugAarMetadata --stacktrace
+    # Bước 3: MẸO THẮNG OPPO: Tạo file khóa cứng vật lý (.jks) trực tiếp vào thư mục code trước khi chạy dịch mã
+    - name: Generate Key Store File
+      run: |
+        keytool -genkey -v -keystore app/app/my-debug-key.jks -storepass androiddebug -alias androiddebugkey -keypass androiddebug -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
-    # Thu gom file APK găm lên mục tóm tắt Summary cho bạn tải về máy tính
+    # Bước 4: Đóng gói ứng dụng chính thức thuần túy
+    - name: Build Debug APK
+      run: gradle :app:assembleDebug --no-configuration-cache -x test -x lint --stacktrace
+
+    # Bước 5: Gom chính xác file APK ĐÃ ĐƯỢC KÝ XỊN găm lên mục tóm tắt Summary cho bạn tải về
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
