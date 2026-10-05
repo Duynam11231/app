@@ -19,26 +19,16 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // ĐÃ SỬA: Đóng gói tệp khóa nằm ngay tại thư mục cục bộ của ứng dụng để đồng bộ 100%
-  signingConfigs {
-    create("releaseConfig") {
-      storeFile = file("my-debug-key.jks")
-      storePassword = "androiddebug"
-      keyAlias = "androiddebugkey"
-      keyPassword = "androiddebug"
-    }
-  }
+  // ĐÃ LÀM SẠCH: Gỡ bỏ hoàn toàn khối signingConfigs thủ công gây lỗi lệch đường dẫn thư mục
 
   buildTypes {
     release {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = signingConfigs.getByName("releaseConfig")
     }
-    debug { 
-      // Ép mang chữ ký số xịn để bẻ khóa bảo mật của chiếc Oppo A5s
-      signingConfig = signingConfigs.getByName("releaseConfig") 
+    debug {
+      // Để trống để hệ thống tự động kích hoạt chữ ký Debug mặc định chuẩn Google
     }
   }
   compileOptions {
