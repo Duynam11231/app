@@ -15,26 +15,21 @@ jobs:
         java-version: '21'
         distribution: 'temurin'
 
-    # Bước 2: Khởi tạo Gradle 9.3.1 đồng bộ kịch trần
+    # Bước 2: Nâng cấp kịch trần lên Gradle 9.3.1 đúng theo yêu cầu hệ thống
     - name: Setup Gradle 9.3.1
       uses: gradle/actions/setup-gradle@v4
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: MẸO GỠ SẬP CỦA GOOGLE: Tạo file khóa ảo ngay tại phân vùng hệ thống để AGP 9.x không báo lỗi package
-    - name: Setup Dummy Keystore
-      run: |
-        mkdir -p ~/.android
-        keytool -genkey -v -keystore ~/.android/debug.keystore -storepass android -alias androiddebugkey -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
-
-    # Bước 4: Ép lệnh build chạy độc lập, bỏ qua hoàn toàn các lớp xác thực ký tên lằng nhằng
+    # Bước 3: Đóng gói file debug APK trực tiếp từ thư mục gốc
     - name: Build Debug APK
-      run: gradle assembleDebug -x validateSigningDebug -x packageDebug --no-configuration-cache --stacktrace
+      run: gradle assembleDebug --no-configuration-cache --stacktrace
 
-    # Bước 5: Kiểm tra và xuất file APK thành phẩm ra màn hình (Quét đa tầng để lấy tệp Unsigned)
+    # Bước 4: ĐÃ SỬA: Quét sâu đa tầng thư mục để gom chính xác file APK găm lên màn hình
     - name: Upload APK Artifact
       uses: actions/upload-artifact@v4
       with:
         name: SieuDongBangAPK
         path: |
+          app/app/build/outputs/apk/debug/*.apk
           app/build/outputs/apk/debug/*.apk
