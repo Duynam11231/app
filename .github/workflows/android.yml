@@ -21,10 +21,10 @@ jobs:
       with:
         gradle-version: '9.3.1'
 
-    # Bước 3: MẸO THẮNG OPPO: Tạo file khóa cứng vật lý (.jks) trực tiếp vào thư mục code trước khi chạy dịch mã
+    # Bước 3: ĐÃ SỬA: Tạo file khóa cứng vật lý (.jks) ngay tại thư mục gốc dự án
     - name: Generate Key Store File
       run: |
-        keytool -genkey -v -keystore app/app/my-debug-key.jks -storepass androiddebug -alias androiddebugkey -keypass androiddebug -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+        keytool -genkey -v -keystore my-debug-key.jks -storepass androiddebug -alias androiddebugkey -keypass androiddebug -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
 
     # Bước 4: Đóng gói ứng dụng chính thức thuần túy
     - name: Build Debug APK
