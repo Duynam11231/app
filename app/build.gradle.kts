@@ -7,29 +7,28 @@ plugins {
 
 android {
   namespace = "com.example"
-  compileSdk = 35 // Hạ xuống API 35 chuẩn để tương thích với Gradle 9.3.1 trên GitHub đám mây
+  // Ép cấu hình biên dịch kịch trần lên Android 16 theo đúng yêu cầu hệ thống
+  compileSdk = 36 
 
   defaultConfig {
     applicationId = "com.aistudio.appfreezer.xyzabc"
     minSdk = 23
-    targetSdk = 35
+    targetSdk = 36
     versionCode = 1
     versionName = "1.0"
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // ĐÃ SỬA: Loại bỏ hoàn toàn khối signingConfigs lỗi để máy chủ không đi tìm file keystore ảo nữa
-
   buildTypes {
     release {
       isCrunchPngs = false
       isMinifyEnabled = false
       proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-      signingConfig = null // Tắt chữ ký số Release
+      signingConfig = null
     }
     debug { 
-      signingConfig = null // ĐÃ SỬA: Tắt hoàn toàn chữ ký số Debug để vượt lỗi ValidateSigning rực rỡ
+      signingConfig = null // Tắt hoàn toàn chữ ký số Debug để vượt lỗi ValidateSigning rực rỡ
     }
   }
   compileOptions {
