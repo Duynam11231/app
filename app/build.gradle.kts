@@ -19,10 +19,10 @@ android {
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
 
-  // ĐOẠN CODE BẮT BUỘC: Tự cấu hình tạo file khóa bảo mật để vượt lỗi Oppo
+  // ĐÃ CHỈNH SỬA: Ép nhảy lùi 2 cấp thư mục để vớ đúng file khóa do GitHub Actions sinh ra
   signingConfigs {
     create("releaseConfig") {
-      storeFile = file("my-debug-key.jks")
+      storeFile = file("../../my-debug-key.jks")
       storePassword = "androiddebug"
       keyAlias = "androiddebugkey"
       keyPassword = "androiddebug"
@@ -37,7 +37,7 @@ android {
       signingConfig = signingConfigs.getByName("releaseConfig")
     }
     debug { 
-      // Ép chế độ Debug cũng phải mang chữ ký số chính thống để vượt xích ColorOS
+      // Ép chế độ Debug mang chữ ký số chính thống để vượt xích bảo mật của máy Oppo A5s
       signingConfig = signingConfigs.getByName("releaseConfig") 
     }
   }
